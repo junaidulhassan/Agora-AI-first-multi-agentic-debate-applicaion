@@ -1,0 +1,41 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    image: agora-backend
+    container_name: agora-backend
+    env_file:
+      - .env
+    environment:
+      HOST: 0.0.0.0
+      PORT: 8000
+      DATA_DIR: /app/data
+      LOG_DIR: /app/logs
+    volumes:
+      - agora-data:/app/data
+      - agora-logs:/app/logs
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=4)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    image: agora-frontend
+    container_name: agora-frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+volumes:
+  agora-data:
+  agora-logs:
