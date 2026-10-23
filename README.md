@@ -12,10 +12,6 @@ Commands below assume you start from the project root.
 
 ## How a debate works
 
-<p align="center">
-  <img src="workflow.svg" alt="Agora debate workflow" width="100%">
-</p>
-
 1. **Question analysis.** The Judge restates the question, lists the claims that decide it, gives each debater a distinct angle, and can add a domain specialist chosen for the question.
 2. **Opening statements.** Every debater picks a stance, searches the web, and argues with cited sources.
 3. **Conflict detection.** The Judge maps who disagrees with whom and sets the speaking order for the next round.
