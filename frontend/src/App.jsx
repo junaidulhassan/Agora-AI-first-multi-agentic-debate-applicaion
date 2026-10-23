@@ -7,7 +7,7 @@ import { useRoute } from './lib/router.js'
 export default function App() {
   const route = useRoute()
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex min-h-dvh flex-col lg:h-dvh">
       <a
         href="#main"
         className="bg-accent text-on-accent sr-only z-50 rounded-lg px-4 py-2 focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
@@ -15,7 +15,7 @@ export default function App() {
         Skip to content
       </a>
       <Header />
-      <div id="main" className="flex-1">
+      <div id="main" className="min-h-0 flex-1">
         {route.name === 'debate' ? <DebateView key={route.debateId} debateId={route.debateId} /> : <Landing />}
       </div>
       <HistoryDrawer />

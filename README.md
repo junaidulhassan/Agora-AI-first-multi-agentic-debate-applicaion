@@ -4,16 +4,16 @@
 
 Agora is a multi-agent debate app. You pick a topic and ask a question. Instead of answering straight away, a panel of AI debaters argues it out in the open. They rebut each other, fact-check each other with live web evidence, and answer to a Judge who rules on every dispute, scores every argument, and punishes weak ones. Only after the debate has converged does the Judge deliver a verdict.
 
-This README is the same file in `backend/` and `frontend/`. It covers the whole project. Commands below assume you start from the project root.
+Commands below assume you start from the project root.
 
 <p align="center">
-  <img src="../docs/screenshots/landing.png" alt="Agora landing screen with topic selector and question input" width="860">
+  <img src="screenshots/landing.png" alt="Agora landing screen with topic selector and question input" width="860">
 </p>
 
 ## How a debate works
 
 <p align="center">
-  <img src="../docs/workflow.svg" alt="Agora debate workflow" width="100%">
+  <img src="workflow.svg" alt="Agora debate workflow" width="100%">
 </p>
 
 1. **Question analysis.** The Judge restates the question, lists the claims that decide it, gives each debater a distinct angle, and can add a domain specialist chosen for the question.
@@ -32,7 +32,7 @@ The panel: the Judge, The Empiricist, The Logician, The Philosopher, The Histori
 The graph shows every agent as a node. Edges animate when agents rebut, agree, accuse or get ruled on. Cream edges are Judge rulings, tinted edges are agent-to-agent actions, and dashed edges mark unverified claims.
 
 <p align="center">
-  <img src="../docs/screenshots/judge-turn-order-and-rulings.png" alt="Live debate with the graph, the credibility scoreboard and the Judge's turn order and conflict report" width="100%">
+  <img src="screenshots/judge-turn-order-and-rulings.png" alt="Live debate with the graph, the credibility scoreboard and the Judge's turn order and conflict report" width="100%">
 </p>
 
 ### Fallacy call-outs
@@ -40,7 +40,7 @@ The graph shows every agent as a node. Edges animate when agents rebut, agree, a
 Debaters name logical fallacies, quote the claim, and cite web evidence inline. Each source chip opens the page it came from.
 
 <p align="center">
-  <img src="../docs/screenshots/fallacy-callouts.png" alt="A rebuttal message with inline citations and fallacy call-outs against two other agents" width="560">
+  <img src="screenshots/fallacy-callouts.png" alt="A rebuttal message with inline citations and fallacy call-outs against two other agents" width="560">
 </p>
 
 ### The Judge disciplines the panel
@@ -48,7 +48,7 @@ Debaters name logical fallacies, quote the claim, and cite web evidence inline. 
 The Judge reprimands, penalizes and rewards in real time. Scores move on the scoreboard, and the penalized agent's node shakes. When the debate converges, a verdict card appears in the feed.
 
 <p align="center">
-  <img src="../docs/screenshots/judge-discipline-and-verdict-card.png" alt="A Judge reprimand with a score penalty, the convergence note and the verdict card" width="100%">
+  <img src="screenshots/judge-discipline-and-verdict-card.png" alt="A Judge reprimand with a score penalty, the convergence note and the verdict card" width="100%">
 </p>
 
 ### Click any agent
@@ -56,7 +56,7 @@ The Judge reprimands, penalizes and rewards in real time. Scores move on the sco
 Select a node or a scoreboard row to see that agent's persona, bias, fighting style, assigned focus, model, credibility history, and its full exchange with every other agent.
 
 <p align="center">
-  <img src="../docs/screenshots/agent-detail.png" alt="Agent detail panel with persona, credibility chart and communication history" width="100%">
+  <img src="screenshots/agent-detail.png" alt="Agent detail panel with persona, credibility chart and communication history" width="100%">
 </p>
 
 ### The verdict
@@ -64,13 +64,13 @@ Select a node or a scoreboard row to see that agent's persona, bias, fighting st
 A cream verdict card with the headline answer, confidence, consensus level, the arguments that won and the ones rejected, what remains uncertain, key sources, and final standings.
 
 <p align="center">
-  <img src="../docs/screenshots/verdict.png" alt="Final verdict card for the Islam versus Christianity question" width="100%">
+  <img src="screenshots/verdict.png" alt="Final verdict card for the Islam versus Christianity question" width="100%">
 </p>
 
 ### Mobile
 
 <p align="center">
-  <img src="../docs/screenshots/landing-mobile.png" alt="Agora landing screen on a phone" width="300">
+  <img src="screenshots/landing-mobile.png" alt="Agora landing screen on a phone" width="300">
 </p>
 
 ## Features
@@ -227,4 +227,4 @@ Debaters are written to fight hard: they can be heated, sarcastic and crude, and
 
 ## Project policies
 
-[MIT License](../LICENSE) · [Privacy](../PRIVACY.md) · [Security](../SECURITY.md) · [Contributing](../CONTRIBUTING.md) · [Code of Conduct](../CODE_OF_CONDUCT.md)
+[MIT License](LICENSE) · [Privacy](PRIVACY.md) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [Code of Conduct](CODE_OF_CONDUCT.md)

@@ -110,7 +110,7 @@ export default function DebateView({ debateId }) {
   const openVerdict = () => setTab('verdict')
 
   return (
-    <main className="mx-auto flex w-full max-w-[1600px] flex-col gap-4 px-3 py-4 sm:px-6 lg:h-[calc(100vh-4rem)]">
+    <main className="mx-auto flex w-full max-w-[1600px] flex-col gap-4 px-3 py-4 sm:px-6 lg:h-full">
       <DebateHeader />
 
       {!desktop && <Tabs value={tab} onChange={setTab} extra={MOBILE_EXTRA} className="glass-deep rounded-2xl p-1" />}

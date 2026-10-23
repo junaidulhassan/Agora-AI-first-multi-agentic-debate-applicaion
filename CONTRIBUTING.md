@@ -6,7 +6,7 @@ Thanks for helping. Bug reports, ideas and pull requests are all welcome.
 
 1. Fork the repository and clone your fork.
 2. Copy `.env.example` to `.env` and add the API keys you have. You only need keys for the providers you use.
-3. Start the backend and frontend as described in `backend/README.md`.
+3. Start the backend and frontend as described in the [README](README.md).
 
 ```bash
 cd backend && python3 -m venv .venv && source .venv/bin/activate

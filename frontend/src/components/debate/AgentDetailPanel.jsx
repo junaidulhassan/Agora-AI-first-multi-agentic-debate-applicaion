@@ -10,6 +10,8 @@ import { agentColor, STATUS_LABELS } from '../../lib/agentMeta.js'
 import { INTERACTION_LABELS, MESSAGE_KIND_LABELS, signed } from '../../lib/format.js'
 import { useDebate } from '../../store/debateStore.js'
 
+const NO_HISTORY = []
+
 function buildThread(messages, selfId, otherId, agents) {
   const items = []
   messages.forEach((message) => {
@@ -124,7 +126,7 @@ function ThreadItem({ item, selfAgent, agents }) {
 export default function AgentDetailPanel({ agentId, onClose }) {
   const agents = useDebate((state) => state.agents)
   const messages = useDebate((state) => state.messages)
-  const history = useDebate((state) => state.scoreHistory[agentId] ?? [])
+  const history = useDebate((state) => state.scoreHistory[agentId] ?? NO_HISTORY)
   const actions = useDebate((state) => state.actions)
   const [other, setOther] = useState('all')
   const agent = agents[agentId]
