@@ -146,68 +146,7 @@ docker compose up --build
 
 Open http://localhost:8080. The web container serves the UI and proxies `/api` and `/ws` to the backend container. The backend is also published on `127.0.0.1:8000` for the API docs. Debates and logs are kept in the `agora-data` and `agora-logs` volumes. Stop with `docker compose down`, or add `-v` to delete the stored data too.
 
-## Configuration
 
-Everything is configured in `.env` at the project root. Keys are never hard-coded.
-
-Each agent has its own provider, model and API key:
-
-| Slot | Role |
-|---|---|
-| `JUDGE` | The Judge |
-| `AGENT_1` | The Empiricist |
-| `AGENT_2` | The Logician |
-| `AGENT_3` | The Philosopher |
-| `AGENT_4` | The Historian |
-| `AGENT_5` | The Skeptic |
-| `AGENT_6` | The Pragmatist |
-| `AGENT_7` | Optional dynamic domain specialist. Leave the key empty to turn it off. |
-
-For each slot you can set `<SLOT>_PROVIDER`, `<SLOT>_MODEL`, `<SLOT>_API_KEY`, and optionally `<SLOT>_BASE_URL`, `<SLOT>_TEMPERATURE`, `<SLOT>_MAX_TOKENS` and `<SLOT>_MAX_INPUT_TOKENS`.
-
-Supported providers: `anthropic`, `openai`, `google`, `groq`, and OpenAI-compatible ones: `openrouter`, `together`, `deepseek`, `xai`, `mistral`, `perplexity`.
-
-```env
-JUDGE_PROVIDER=google
-JUDGE_MODEL=gemini-2.5-flash-lite
-JUDGE_API_KEY=your-key
-
-AGENT_1_PROVIDER=groq
-AGENT_1_MODEL=openai/gpt-oss-120b
-AGENT_1_API_KEY=your-key
-AGENT_1_MAX_INPUT_TOKENS=6000
-
-TAVILY_API_KEY=your-key
-```
-
-Other useful settings:
-
-| Variable | What it does | Default |
-|---|---|---|
-| `TAVILY_API_KEY` | Web search for evidence. Without it every argument is flagged unverified. | empty |
-| `MIN_ROUNDS` / `MAX_ROUNDS` | Minimum cross-examination rounds before the Judge may converge, and the hard cap. | 2 / 4 |
-| `LLM_TIMEOUT_SECONDS` | How long to wait for a slow agent. | 600 |
-| `LLM_MAX_RETRIES` | Retries on rate limits and network errors. | 6 |
-| `PARALLEL_OPENINGS` / `PARALLEL_REBUTTALS` | Run turns in parallel. | true / false |
-| `<SLOT>_MAX_INPUT_TOKENS` | Shrinks the transcript to fit providers with small per-request limits, such as Groq's free tier. | unlimited |
-| `CORS_ORIGINS` | Allowed browser origins. | localhost:5173 |
-
-Model availability changes. If a model returns "not found" or "no longer available" for your key, change its `_MODEL` value. Keep `.env` out of version control.
-
-## API
-
-| Method | Path | Purpose |
-|---|---|---|
-| `GET` | `/api/health` | Status and which API keys are missing |
-| `GET` | `/api/config` | The panel and server limits |
-| `POST` | `/api/debates` | Start a debate with `question` and `topic` |
-| `GET` | `/api/debates` | List saved debates |
-| `GET` | `/api/debates/{id}` | A debate's details and full event history |
-| `POST` | `/api/debates/{id}/cancel` | Adjourn a running debate |
-| `DELETE` | `/api/debates/{id}` | Delete a debate |
-| `WS` | `/ws/debates/{id}?after=N` | Live event stream, replaying anything after event `N` |
-
-Errors come back in one shape: `{"error": {"code", "message", "details", "request_id"}}`.
 
 ## Logs and data
 
