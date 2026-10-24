@@ -21,7 +21,6 @@ Commands below assume you start from the project root.
 
 The panel: Judge Marcus, and the debaters Chris the Empiricist, Anna the Logician, Leo the Philosopher, Maria the Historian, Jack the Skeptic, Sara the Pragmatist, plus an optional dynamic specialist (Ethan). Names and personas live in `backend/app/agents/personas.py`. Each debater has its own persona, bias, fighting style, and its own model and API key.
 
-## Screenshots
 
 ### Live debate: the arena, the feed and the Judge
 
@@ -80,85 +79,7 @@ A cream verdict card with the headline answer, confidence, consensus level, the 
 - **Resilient by design.** Slow agents are waited for, never skipped. Rate limits and network errors retry with exponential backoff. A failed web search is flagged as unverified and the debate continues. If the connection drops, the UI reconnects and catches up from where it left off.
 - **Structured logs** in JSON, with separate application, agent, web-search and error files, and a correlation id per debate and per turn.
 
-## Samples
 
-Questions that work well:
-
-- Does God exist?
-- Islam vs. Christianity: which religion is better overall?
-- Is it acceptable to kill animals for food when vegan options are plentiful?
-- Will AI recursively improve itself and become an existential risk?
-- Do humans have free will?
-- Is universal basic income a good idea?
-
-Sample verdict headlines from real runs:
-
-> Neither Islam nor Christianity can be proven objectively superior overall, as the debate exposes an intractable tension between empirical socio-economic developmental metrics and foundational theological-legal frameworks. *(confidence 65%, contested)*
-
-> The moral permissibility of killing animals for food is irreducibly contested between plant-based nutritional adequacy and the severe socioeconomic disruptions of global dietary shifts.
-
-## Quick start
-
-You need Python 3.11+ and Node 20.19+ (or 22+).
-
-```bash
-cp .env.example .env
-```
-
-Fill in `.env` (see below), then run the two halves in separate terminals.
-
-**Backend** (API and WebSocket on port 8000):
-
-```bash
-cd backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python run.py
-```
-
-Run it with the virtual environment's Python. Starting it with a different Python gives `ModuleNotFoundError: No module named 'structlog'`.
-
-**Frontend** (UI on port 5173, proxies `/api` and `/ws` to the backend):
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Open http://localhost:5173. API docs are at http://localhost:8000/docs.
-
-To point the UI at a backend on another port, start Vite with `AGORA_BACKEND_URL=http://localhost:8003 npm run dev`. For a production build, run `npm run build`, and set `VITE_API_BASE` and `VITE_WS_BASE` if the API is on a different origin.
-
-### Run with Docker
-
-With Docker and Docker Compose installed, from the project root:
-
-```bash
-cp .env.example .env
-docker compose up --build
-```
-
-Open http://localhost:8080. The web container serves the UI and proxies `/api` and `/ws` to the backend container. The backend is also published on `127.0.0.1:8000` for the API docs. Debates and logs are kept in the `agora-data` and `agora-logs` volumes. Stop with `docker compose down`, or add `-v` to delete the stored data too.
-
-
-
-## Logs and data
-
-- Logs are written to `backend/logs/` as `agora-app.log`, `agora-agents.log`, `agora-search.log` and `agora-errors.log`. They are JSON and rotate automatically. Agent logs include latency, token counts, retries and failures per call.
-- Debates are saved in `backend/data/debates/`. A debate that was running when the server stopped shows up as interrupted.
-
-## Built with
-
-**Backend:** FastAPI, LangGraph, LangChain, Tavily, Pydantic, tenacity, structlog.
-**Frontend:** React, Vite, Tailwind CSS, React Flow, Framer Motion, Zustand.
-
-The whole UI is built on two brand colors, Blueberry (`#2C3B8A`) and Cream Soda (`#FDF0C8`). Every color is a token in `frontend/src/theme/theme.css`, and components use only those tokens.
-
-## About the agents' tone
-
-Debaters are written to fight hard: they can be heated, sarcastic and crude, and the Judge can lose its temper. Prompts live in `backend/app/agents/prompts.py` and the personas in `backend/app/agents/personas.py`. Which models actually swear depends on the model. Some providers soften it on their own.
 
 ## Project policies
 
