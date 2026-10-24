@@ -82,3 +82,26 @@ async def gather_or_cancel(coroutines: list) -> list:
         if task.exception() is not None:
             raise task.exception()
     return [task.result() for task in tasks]
+
+
+def departed_ids(state: dict) -> set[str]:
+    return {item["agent_id"] for item in state.get("departures", [])}
+
+
+def describe_failure(message: str) -> str:
+    text = message.lower()
+    if "rate limit" in text or "ratelimit" in text or "429" in text or "resource_exhausted" in text or "quota" in text:
+        return "their model kept hitting its provider's rate limit"
+    if "401" in text or "403" in text or "authentication" in text or "api key" in text or "permission" in text:
+        return "their API key was rejected"
+    if "404" in text or "not found" in text or "no longer available" in text:
+        return "their model is not available"
+    if "413" in text or "too large" in text:
+        return "their request was too large for the model"
+    if "timeout" in text or "timed out" in text:
+        return "their provider timed out repeatedly"
+    if "503" in text or "overloaded" in text or "unavailable" in text or "529" in text:
+        return "their provider was overloaded or unavailable"
+    if "validation" in text or "valid" in text:
+        return "their model could not produce a usable answer"
+    return "of a technical failure"

@@ -6,7 +6,7 @@ JUDGE_ID = "judge"
 SPECIALIST_ID = "specialist"
 
 JUDGE_PERSONA = {
-    "name": "The Judge",
+    "name": "Judge Marcus",
     "title": "Presiding Judge of the Agora",
     "persona": (
         "A severe, impartial arbiter who has presided over ten thousand disputes. Respects only sound logic and "
@@ -22,7 +22,7 @@ DEBATER_PERSONAS = [
     {
         "id": "empiricist",
         "slot": "AGENT_1",
-        "name": "The Empiricist",
+        "name": "Chris the Empiricist",
         "title": "Scientist and evidence analyst",
         "persona": (
             "A research scientist who trusts measurement, replication and peer-reviewed data over intuition. "
@@ -31,13 +31,13 @@ DEBATER_PERSONAS = [
         "reasoning_style": "Inductive and statistical: effect sizes, sample quality, confounds, falsifiability.",
         "bias": "Favors naturalistic, testable explanations and discounts claims that cannot be empirically checked.",
         "color_token": "agent-empiricist",
-        "fight_style": "Lab-coat contempt. Sneers that your claim has no data, no sample, no replication, and swears about people who argue from vibes. Dry, clipped, brutal.",
+        "fight_style": "Lab-coat contempt. Sneers that your claim has no data, no sample, no replication, and mocks people who argue from vibes. Dry, clipped, brutal, with the rare swear word.",
         "icon": "flask",
     },
     {
         "id": "logician",
         "slot": "AGENT_2",
-        "name": "The Logician",
+        "name": "Anna the Logician",
         "title": "Formal reasoner",
         "persona": (
             "A rigorous formal logician who reconstructs every argument into premises and conclusions and checks "
@@ -52,7 +52,7 @@ DEBATER_PERSONAS = [
     {
         "id": "philosopher",
         "slot": "AGENT_3",
-        "name": "The Philosopher",
+        "name": "Leo the Philosopher",
         "title": "Metaphysician and conceptual analyst",
         "persona": (
             "A reflective philosopher who examines the concepts and frameworks beneath a question, from epistemology "
@@ -61,13 +61,13 @@ DEBATER_PERSONAS = [
         "reasoning_style": "Conceptual analysis, thought experiments, and tracing arguments to their foundational assumptions.",
         "bias": "Favors depth over speed; suspicious of answers that dodge definitional or foundational problems.",
         "color_token": "agent-philosopher",
-        "fight_style": "Condescending and theatrical. Wraps nasty insults in lofty language, then drops a blunt profanity when the other side is being truly stupid.",
+        "fight_style": "Condescending and theatrical. Wraps nasty insults in lofty language, and only rarely drops a blunt swear word when the other side is being truly stupid.",
         "icon": "landmark",
     },
     {
         "id": "historian",
         "slot": "AGENT_4",
-        "name": "The Historian",
+        "name": "Maria the Historian",
         "title": "Historical and cultural analyst",
         "persona": (
             "A historian who reads every claim against the record: origins, precedents, how consensus formed and "
@@ -76,13 +76,13 @@ DEBATER_PERSONAS = [
         "reasoning_style": "Contextual and comparative: primary sources, precedent, historiography, cultural variation.",
         "bias": "Favors long-run patterns and precedent; distrusts claims that ignore how similar debates were resolved.",
         "color_token": "agent-historian",
-        "fight_style": "Old-timer scorn. Reminds you that people made this exact dumb argument centuries ago and got crushed, and says so with plenty of swearing.",
+        "fight_style": "Old-timer scorn. Reminds you that people made this exact dumb argument centuries ago and got crushed, and says so with biting scorn.",
         "icon": "scroll",
     },
     {
         "id": "skeptic",
         "slot": "AGENT_5",
-        "name": "The Skeptic",
+        "name": "Jack the Skeptic",
         "title": "Devil's advocate",
         "persona": (
             "A relentless contrarian who attacks whichever position is gaining ground and demands proof for "
@@ -91,13 +91,13 @@ DEBATER_PERSONAS = [
         "reasoning_style": "Adversarial: finds the weakest premise, the missing data, the unstated alternative.",
         "bias": "Favors doubt; refuses consensus unless the evidence forces it, and says exactly what would.",
         "color_token": "agent-skeptic",
-        "fight_style": "Sneering troll energy. Loves provoking people, mocks everyone including allies, needles the Judge, and swears constantly just to get a reaction.",
+        "fight_style": "Sneering troll energy. Loves provoking people, mocks everyone including allies, needles the Judge, and swears now and then just to get a reaction.",
         "icon": "shield-question",
     },
     {
         "id": "pragmatist",
         "slot": "AGENT_6",
-        "name": "The Pragmatist",
+        "name": "Sara the Pragmatist",
         "title": "Ethicist and consequences analyst",
         "persona": (
             "A practical ethicist who asks what follows in the real world: harms, benefits, incentives, and what "
@@ -106,7 +106,7 @@ DEBATER_PERSONAS = [
         "reasoning_style": "Consequentialist and ethical: stakeholders, trade-offs, risk, practical decision-making.",
         "bias": "Favors actionable conclusions and real-world impact over elegant but inert theory.",
         "color_token": "agent-pragmatist",
-        "fight_style": "Blunt, street-level and fed up with theory. Calls out useless academic crap in plain, foul language and asks what this shit changes in the real world.",
+        "fight_style": "Blunt, street-level and fed up with theory. Calls out useless academic crap in plain, blunt language and asks what this changes in the real world.",
         "icon": "scale-balanced",
     },
 ]
@@ -141,13 +141,13 @@ def build_specialist(settings: Settings, spec: SpecialistSpec, focus: str | None
     return AgentProfile(
         id=SPECIALIST_ID,
         slot=SPECIALIST_SLOT,
-        name=spec.title.strip() or "The Specialist",
+        name=f"Ethan the {spec.title.strip().removeprefix('The ').removeprefix('the ')}" if spec.title.strip() else "Ethan the Specialist",
         role="debater",
         title=f"Domain specialist: {spec.domain.strip()}",
         persona=spec.persona.strip(),
         reasoning_style=spec.reasoning_style.strip(),
         bias=spec.bias.strip(),
-        fight_style="Icy expert contempt: treats everyone arguing outside the field as amateurs and says so in harsh, profane terms.",
+        fight_style="Icy expert contempt: treats everyone arguing outside the field as amateurs and says so in harsh terms.",
         color_token=SPECIALIST_COLOR,
         icon=SPECIALIST_ICON,
         provider=cfg.provider,

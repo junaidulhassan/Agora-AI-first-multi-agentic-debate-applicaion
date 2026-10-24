@@ -33,6 +33,7 @@ MessageKind = Literal[
     "penalty",
     "reward",
     "judge_reply",
+    "departure",
     "convergence",
     "verdict",
 ]

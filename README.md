@@ -19,7 +19,7 @@ Commands below assume you start from the project root.
 5. **Convergence check.** The debate loops through cross-examination until at least the minimum number of rounds is done and the Judge says positions have settled.
 6. **Final verdict.** Winning and rejected arguments, remaining uncertainty, confidence, and final standings.
 
-The panel: the Judge, The Empiricist, The Logician, The Philosopher, The Historian, The Skeptic, The Pragmatist, and an optional dynamic specialist. Each debater has its own persona, bias, fighting style, and its own model and API key.
+The panel: Judge Marcus, and the debaters Chris the Empiricist, Anna the Logician, Leo the Philosopher, Maria the Historian, Jack the Skeptic, Sara the Pragmatist, plus an optional dynamic specialist (Ethan). Names and personas live in `backend/app/agents/personas.py`. Each debater has its own persona, bias, fighting style, and its own model and API key.
 
 ## Screenshots
 

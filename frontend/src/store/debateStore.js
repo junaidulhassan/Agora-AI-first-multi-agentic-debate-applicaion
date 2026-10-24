@@ -38,6 +38,8 @@ const makeAgent = (profile, previous) => ({
   elapsed: 0,
   spokeNonce: 0,
   flash: null,
+  departed: false,
+  leftReason: null,
   ...previous,
   ...profile,
 })
@@ -83,6 +85,13 @@ function reduceEvent(state, event, live) {
         status: payload.status,
         statusDetail: payload.detail ?? null,
         elapsed: payload.elapsed_s ?? 0,
+      })
+    case 'agent_left':
+      return patchAgent(next, payload.agent_id, {
+        departed: true,
+        leftReason: payload.reason,
+        status: 'idle',
+        statusDetail: null,
       })
     case 'phase_changed':
       return {

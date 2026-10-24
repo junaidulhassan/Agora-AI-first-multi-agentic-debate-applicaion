@@ -48,6 +48,7 @@ export const MESSAGE_KIND_LABELS = {
   penalty: 'Penalty',
   reward: 'Reward',
   judge_reply: 'Reply to challenge',
+  departure: 'Left the debate',
   convergence: 'Convergence check',
   verdict: 'Final verdict',
 }

@@ -7,7 +7,8 @@ import structlog
 from app.agents import prompts
 from app.graph.context import DebateContext
 from app.agents.personas import JUDGE_ID
-from app.graph.helpers import evidence_lookup, judge_message, resolve_agent_id
+from app.errors import AgentCallError
+from app.graph.helpers import describe_failure, evidence_lookup, judge_message, resolve_agent_id
 from app.graph.judge_call import judge_budgets, judge_call
 from app.ids import new_id, utc_now
 from app.logging_setup import get_logger
@@ -26,6 +27,7 @@ class TurnResult:
     evidence: list[dict] = field(default_factory=list)
     interactions: list[dict] = field(default_factory=list)
     replies: list[dict] = field(default_factory=list)
+    departure: dict | None = None
 
 
 def _register_evidence(
@@ -70,6 +72,63 @@ async def run_debater_turn(
     round_: int,
     local_messages: list[dict],
     local_evidence: list[dict],
+    departed: set[str],
+    assignment: dict | None = None,
+) -> TurnResult:
+    try:
+        return await _run_debater_turn(
+            ctx,
+            state,
+            agents,
+            agent,
+            mode=mode,
+            round_=round_,
+            local_messages=local_messages,
+            local_evidence=local_evidence,
+            departed=departed,
+            assignment=assignment,
+        )
+    except AgentCallError as exc:
+        if exc.agent_id != agent.id:
+            raise
+        return _depart(ctx, agent, exc, round_)
+
+
+def _depart(ctx: DebateContext, agent: AgentProfile, exc: AgentCallError, round_: int) -> TurnResult:
+    reason = describe_failure(str(exc))
+    log.error("agent_departed", agent_id=agent.id, round=round_, reason=reason, detail=str(exc)[:300])
+    ctx.set_status(agent.id, "idle", None, None)
+    ctx.session.emit(
+        "agent_left",
+        {"agent_id": agent.id, "reason": reason, "detail": str(exc)[:300], "round": round_},
+    )
+    message = judge_message(
+        ctx,
+        kind="departure",
+        content=(
+            f"{agent.name} has walked out of the chamber because {reason}. Their arguments so far stay on the "
+            "record. The debate continues without them."
+        ),
+        round_=round_,
+        phase="rebuttal" if round_ > 0 else "opening",
+        tone="stern",
+        targets=[agent.id],
+        meta={"reason": reason},
+    )
+    return TurnResult(message=message, departure={"agent_id": agent.id, "reason": reason, "round": round_})
+
+
+async def _run_debater_turn(
+    ctx: DebateContext,
+    state: dict,
+    agents: list[AgentProfile],
+    agent: AgentProfile,
+    *,
+    mode: str,
+    round_: int,
+    local_messages: list[dict],
+    local_evidence: list[dict],
+    departed: set[str],
     assignment: dict | None = None,
 ) -> TurnResult:
     turn_id = new_id("turn")
@@ -86,7 +145,8 @@ async def run_debater_turn(
         directive = (state.get("directives") or {}).get(agent.id)
         assignment_directive = (assignment or {}).get("directive")
         directive = " ".join(part for part in (directive, assignment_directive) if part) or None
-        targets = (assignment or {}).get("targets", [])
+        targets = [t for t in (assignment or {}).get("targets", []) if t not in departed]
+        active_agents = [item for item in agents if item.id not in departed]
         stances: dict[str, str] = {}
         for item in messages:
             if item.get("stance") and item["author_id"] != agent.id:
@@ -108,6 +168,14 @@ async def run_debater_turn(
             if item["kind"] == "judge_reply" and agent.id in item["targets"] and item["round"] == current
         ]
         judge_note = " ".join(notes) or None
+        names = {item.id: item.name for item in agents}
+        open_questions = " | ".join(
+            f"{names.get(item['author_id'], item['author_id'])} asks: {e['point']}"
+            for item in messages
+            if item["round"] >= current and item["author_id"] != agent.id
+            for e in item.get("engagements", [])
+            if e["kind"] == "question" and e["target_id"] == agent.id
+        ) or None
 
         ctx.set_status(agent.id, "thinking", "Planning research", turn_id)
         max_queries = ctx.settings.max_searches_per_turn
@@ -186,10 +254,11 @@ async def run_debater_turn(
                 directive,
                 targets,
                 "\n".join(notes),
-                agents,
+                active_agents,
                 judge_note,
                 locked_stance,
                 stances,
+                open_questions,
             ),
             schema=DebaterTurn,
             purpose=f"{mode}_argument",
@@ -197,7 +266,7 @@ async def run_debater_turn(
             status_detail="Drafting argument",
         )
 
-        result = _finalize_turn(ctx, agent, agents, turn, mode, round_, turn_id, pool)
+        result = _finalize_turn(ctx, agent, active_agents, turn, mode, round_, turn_id, pool)
         result.evidence = new_evidence
         challenges = [e for e in result.message["engagements"] if e["kind"] == "challenge"]
         if challenges:

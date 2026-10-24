@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight, ChevronDown, Cpu, Crosshair, Quote, X } from 'lucide-react'
+import { ArrowRight, ChevronDown, Cpu, Crosshair, Quote, UserX, X } from 'lucide-react'
 import AgentAvatar from '../ui/AgentAvatar.jsx'
 import Badge from '../ui/Badge.jsx'
 import ScoreBar from '../ui/ScoreBar.jsx'
@@ -181,7 +181,13 @@ export default function AgentDetailPanel({ agentId, onClose }) {
           </h2>
           <p className="text-muted text-sm">{agent.title}</p>
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            <Badge tone={agent.status === 'idle' ? 'muted' : 'cream'}>{STATUS_LABELS[agent.status]}</Badge>
+            {agent.departed ? (
+              <Badge tone="warning" icon={UserX}>
+                Left the debate
+              </Badge>
+            ) : (
+              <Badge tone={agent.status === 'idle' ? 'muted' : 'cream'}>{STATUS_LABELS[agent.status]}</Badge>
+            )}
             <Badge tone="muted" icon={Cpu}>
               {agent.provider} · {agent.model}
             </Badge>
@@ -275,7 +281,7 @@ export default function AgentDetailPanel({ agentId, onClose }) {
                 }`}
               >
                 <AgentAvatar agent={candidate} size={20} />
-                {candidate.name.replace(/^The /, '')} ({counts[candidate.id]})
+                {candidate.role === 'judge' ? 'Judge' : candidate.name.split(' ')[0]} ({counts[candidate.id]})
               </button>
             ))}
           </div>

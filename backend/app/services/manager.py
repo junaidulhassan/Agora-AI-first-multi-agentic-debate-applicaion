@@ -97,6 +97,7 @@ class SessionManager:
             "interactions": [],
             "rulings": [],
             "penalties": [],
+            "departures": [],
             "conflicts": [],
             "scores": {},
             "directives": {},

@@ -13,6 +13,7 @@ class DebateState(TypedDict, total=False):
     interactions: Annotated[list[dict], operator.add]
     rulings: Annotated[list[dict], operator.add]
     penalties: Annotated[list[dict], operator.add]
+    departures: Annotated[list[dict], operator.add]
     conflicts: list[dict]
     scores: dict[str, float]
     directives: dict[str, str]

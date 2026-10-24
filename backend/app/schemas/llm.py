@@ -212,6 +212,7 @@ class RejectedArgument(BaseModel):
 
 
 class FinalVerdict(BaseModel):
+    decision: str = ""
     headline: str
     answer: str
     confidence: float

@@ -5,7 +5,7 @@ from app.agents import prompts
 from app.agents.personas import JUDGE_ID, SPECIALIST_ID, build_specialist, specialist_available
 from app.graph.context import DebateContext, get_context, parse_agents
 from app.graph.judge_call import judge_budgets, judge_call
-from app.graph.helpers import clamp_score, debaters, judge_message, resolve_agent_id
+from app.graph.helpers import clamp_score, debaters, departed_ids, judge_message, resolve_agent_id
 from app.graph.state import DebateState
 from app.logging_setup import get_logger
 from app.schemas.domain import Conflict
@@ -116,7 +116,8 @@ async def conflicts_node(state: DebateState, config: RunnableConfig) -> dict:
     round_ = state.get("round", 0)
     ctx.enter_phase("conflicts", round_)
 
-    panel = debaters(agents)
+    gone = departed_ids(state)
+    panel = [agent for agent in debaters(agents) if agent.id not in gone]
     existing = {conflict["id"]: conflict for conflict in state.get("conflicts", [])}
     report = await judge_call(
         ctx,
@@ -131,6 +132,7 @@ async def conflicts_node(state: DebateState, config: RunnableConfig) -> dict:
             agents,
             round_,
             round_ + 1,
+            prompts.render_departures(state.get("departures", []), agents),
         ),
         schema=ConflictReport,
     )
@@ -172,7 +174,7 @@ async def conflicts_node(state: DebateState, config: RunnableConfig) -> dict:
     order = []
     for raw in report.speaking_order:
         agent_id = resolve_agent_id(raw, agents)
-        if agent_id and agent_id not in order:
+        if agent_id and agent_id not in order and agent_id not in gone:
             order.append(agent_id)
     order += [agent.id for agent in panel if agent.id not in order]
 
@@ -255,6 +257,7 @@ async def ruling_node(state: DebateState, config: RunnableConfig) -> dict:
             prompts.render_scores(state.get("scores", {}), agents),
             prompts.render_evidence(state.get("evidence", []), judge_budgets(ctx)[1], 0),
             penalties_text,
+            prompts.render_departures(state.get("departures", []), agents),
         ),
         schema=RoundRuling,
     )
@@ -441,6 +444,7 @@ async def convergence_node(state: DebateState, config: RunnableConfig) -> dict:
                 prompts.render_transcript(state.get("messages", [])[-24:], agents, round_, judge_budgets(ctx)[0]),
                 prompts.render_conflicts(state.get("conflicts", []), agents),
                 prompts.render_scores(state.get("scores", {}), agents),
+                prompts.render_departures(state.get("departures", []), agents),
             ),
             schema=ConvergenceAssessment,
         )
@@ -491,6 +495,7 @@ async def verdict_node(state: DebateState, config: RunnableConfig) -> dict:
             rulings_text,
             prompts.render_scores(state.get("scores", {}), agents),
             prompts.render_evidence(state.get("evidence", []), judge_budgets(ctx)[1], 0),
+            prompts.render_departures(state.get("departures", []), agents),
         ),
         schema=FinalVerdict,
     )

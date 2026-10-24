@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react'
 import { Handle, Position } from '@xyflow/react'
 import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
-import { Brain, Clock, Loader2, MessageSquareText, OctagonAlert, Search, Sparkles, ThumbsDown, ThumbsUp } from 'lucide-react'
+import { Brain, Clock, UserX, Loader2, MessageSquareText, OctagonAlert, Search, Sparkles, ThumbsDown, ThumbsUp } from 'lucide-react'
 import { agentColor, agentIcon, STATUS_LABELS } from '../../lib/agentMeta.js'
 import { usePrefersReducedMotion } from '../../lib/hooks.js'
 import { signed } from '../../lib/format.js'
@@ -50,7 +50,11 @@ function AgentNode({ data }) {
   const label = STATUS_LABELS[agent.status]
 
   return (
-    <motion.div animate={controls} className="relative flex flex-col items-center" style={{ width: size + 40 }}>
+    <motion.div
+      animate={controls}
+      className="relative flex flex-col items-center"
+      style={{ width: size + 40, opacity: agent.departed ? 0.45 : 1, filter: agent.departed ? 'grayscale(0.7)' : undefined }}
+    >
       <Handle type="source" position={Position.Top} isConnectable={false} className="!pointer-events-none !opacity-0" style={centerStyle(size)} />
       <Handle type="target" position={Position.Top} isConnectable={false} className="!pointer-events-none !opacity-0" style={centerStyle(size)} />
 
@@ -115,6 +119,11 @@ function AgentNode({ data }) {
         <div className="text-ink max-w-[140px] truncate text-xs font-semibold" style={{ textShadow: '0 1px 6px var(--bg-deep)' }}>
           {agent.name}
         </div>
+        {agent.departed && (
+          <div className="border-warning/60 text-warning bg-deep mt-1 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold">
+            <UserX className="size-3" aria-hidden /> Left the debate
+          </div>
+        )}
         {agent.score != null && (
           <div className="glass-deep mt-1 inline-block rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums">
             {Math.round(agent.score)}

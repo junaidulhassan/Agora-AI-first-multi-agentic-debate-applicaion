@@ -1,5 +1,5 @@
 import { LayoutGroup, motion } from 'framer-motion'
-import { ArrowDown, ArrowUp, Minus, Trophy } from 'lucide-react'
+import { ArrowDown, ArrowUp, Minus, Trophy, UserX } from 'lucide-react'
 import AgentAvatar from '../ui/AgentAvatar.jsx'
 import ScoreBar from '../ui/ScoreBar.jsx'
 import { agentColor, STATUS_LABELS } from '../../lib/agentMeta.js'
@@ -60,6 +60,11 @@ export default function Scoreboard() {
                     </span>
                   </span>
                   <ScoreBar value={agent.score} color={agentColor(agent)} label={`${agent.name} credibility`} />
+                  {agent.departed && (
+                    <span className="text-warning mt-1 flex items-center gap-1 truncate text-[11px]">
+                      <UserX className="size-3" aria-hidden /> Left the debate: {agent.leftReason}
+                    </span>
+                  )}
                   {agent.status !== 'idle' && (
                     <span className="text-muted mt-1 block truncate text-[11px]">
                       {agent.statusDetail || STATUS_LABELS[agent.status]}

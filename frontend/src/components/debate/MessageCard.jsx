@@ -19,6 +19,7 @@ import {
   ExternalLink,
   Megaphone,
   MessagesSquare,
+  UserX,
   ShieldCheck,
 } from 'lucide-react'
 import AgentAvatar from '../ui/AgentAvatar.jsx'
@@ -45,6 +46,7 @@ const JUDGE_STYLE = {
   reward: { icon: ThumbsUp, tone: 'success', label: 'Reward' },
   instruction: { icon: Gavel, tone: 'neutral', label: 'Instruction' },
   ruling: { icon: Gavel, tone: 'cream', label: 'Ruling' },
+  departure: { icon: UserX, tone: 'warning', label: 'Left the debate' },
   judge_reply: { icon: MessagesSquare, tone: 'cream', label: 'Reply to challenge' },
   conflict_report: { icon: ListOrdered, tone: 'neutral', label: 'Conflict report' },
   analysis: { icon: Gavel, tone: 'cream', label: 'Opening address' },
@@ -248,7 +250,7 @@ function JudgeCard({ message, agent, onOpenVerdict }) {
     return (
       <article className="bg-accent text-on-accent shadow-glow rounded-2xl p-4">
         <div className="flex items-center gap-2 text-sm font-semibold">
-          <Gavel className="size-4" aria-hidden /> The Judge has reached a verdict
+          <Gavel className="size-4" aria-hidden /> {agent.name} has reached a verdict
         </div>
         <p className="font-display mt-2 text-lg leading-snug font-semibold">{message.meta?.headline}</p>
         <button
@@ -273,7 +275,7 @@ function JudgeCard({ message, agent, onOpenVerdict }) {
       <header className="mb-2 flex flex-wrap items-center gap-2">
         <AgentAvatar agent={agent} size={30} />
         <div className="min-w-0 flex-1">
-          <div className="text-agent-judge text-sm leading-tight font-semibold">The Judge</div>
+          <div className="text-agent-judge text-sm leading-tight font-semibold">{agent.name}</div>
           <div className="text-muted text-xs">
             {targets.length > 0 && targets.length <= 2 ? `To ${targets.join(' and ')} · ` : ''}
             {message.round > 0 ? `Round ${message.round} · ` : ''}

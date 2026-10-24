@@ -35,5 +35,10 @@ class AgentCallError(AgoraError):
         self.agent_id = agent_id
 
 
+class PanelCollapsedError(AgoraError):
+    code = "panel_collapsed"
+    status_code = 502
+
+
 class OutputValidationError(Exception):
     pass
