@@ -81,6 +81,18 @@ A cream verdict card with the headline answer, confidence, consensus level, the 
 
 
 
+## Local model (GPU)
+
+Any agent slot can run a GGUF model from `backend/Local-model/` instead of a hosted API:
+
+```
+AGENT_1_PROVIDER=local
+AGENT_1_MODEL=Qwen3-1.7B-Q4_K_M.gguf
+AGENT_1_MAX_INPUT_TOKENS=5500
+```
+
+This needs `llama-cpp-python` built with CUDA (`CMAKE_ARGS="-DGGML_CUDA=on" pip install llama-cpp-python`, which requires the CUDA toolkit). Context size, GPU layers and KV-cache quantisation are tuned with the `LOCAL_MODEL_*` variables in `.env.example`. Slots that share a model file share one copy in GPU memory and take turns generating.
+
 ## Project policies
 
 [MIT License](LICENSE) · [Privacy](PRIVACY.md) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [Code of Conduct](CODE_OF_CONDUCT.md)

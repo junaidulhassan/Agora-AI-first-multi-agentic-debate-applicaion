@@ -24,7 +24,7 @@ PROVIDER_BASE_URLS = {
     "perplexity": "https://api.perplexity.ai",
 }
 
-SUPPORTED_PROVIDERS = {"anthropic", "openai", "google", "groq", *PROVIDER_BASE_URLS}
+SUPPORTED_PROVIDERS = {"anthropic", "openai", "google",*PROVIDER_BASE_URLS}
 
 
 def _env(name: str, default: str | None = None) -> str | None:

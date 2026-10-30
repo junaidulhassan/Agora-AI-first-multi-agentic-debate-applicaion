@@ -11,3 +11,4 @@ frontend/dist/
 .env.*
 !.env.example
 *.log
+/backend/Local-model

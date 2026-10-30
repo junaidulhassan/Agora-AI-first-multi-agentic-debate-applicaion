@@ -44,20 +44,6 @@ def build_chat_model(cfg: LLMConfig, timeout: float) -> BaseChatModel:
             kwargs["temperature"] = cfg.temperature
         return ChatGoogleGenerativeAI(**kwargs)
 
-    if provider == "groq":
-        from langchain_groq import ChatGroq
-
-        kwargs = {
-            "model": cfg.model,
-            "api_key": cfg.api_key,
-            "max_tokens": cfg.max_tokens,
-            "timeout": timeout,
-            "max_retries": 0,
-        }
-        if cfg.temperature is not None:
-            kwargs["temperature"] = cfg.temperature
-        return ChatGroq(**kwargs)
-
     from langchain_openai import ChatOpenAI
 
     kwargs = {
